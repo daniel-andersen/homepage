@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="../stylesheet.css" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Kampen mod Dystopia - Trolls Ahead</title>
+
+  <meta name="description" content="Et fængslende brætspil, der foregår i en eventyrverden befolket af Orc'er og udødelige skabninger fra Underverdenen. Det er nemt at komme i gang: Udskriv arkene, klip og klister, og spil!">
+  <meta name="keywords" content="spil,brætspil,fantasi,eventyr,gratis,Trolls Ahead">
+  <meta name="gruppe" content="Danmark">
+
+  <script type="text/javascript">
+    timer1 = null;
+    timer1_interval = 10;
+    timer2 = null;
+    timer2_interval = 1000;
+
+    thumbs_animation_start = 0;
+
+    thumbs_measure = 0;
+    thumbs_measure_last = 0;
+
+    thumbs_speed_orig = 5.0;
+    thumbs_speed = 0;
+
+    thumbs_width = 200;
+    thumbs_distance = 200.0;
+
+    thumb1_progress = 75.0;
+    thumb2_progress = 0.0;
+
+    spilleregler_normal = new Image(100,100);
+    spilleregler_normal.src = "images/spilleregler.png";
+    spilleregler_highlight = new Image(100,100);
+    spilleregler_highlight.src = "images/spilleregler_highlight.png";
+
+    eventyrbog_normal = new Image(100,100);
+    eventyrbog_normal.src = "images/eventyrbog.png";
+    eventyrbog_highlight = new Image(100,100);
+    eventyrbog_highlight.src = "images/eventyrbog_highlight.png";
+
+    elementer_normal = new Image(100,100);
+    elementer_normal.src = "images/elementer.png";
+    elementer_highlight = new Image(100,100);
+    elementer_highlight.src = "images/elementer_highlight.png";
+
+    instruktion_normal = new Image(100,100);
+    instruktion_normal.src = "images/instruktion.png";
+    instruktion_highlight = new Image(100,100);
+    instruktion_highlight.src = "images/instruktion_highlight.png";
+
+    thumbs_count = 8;
+    thumbs = new Array(thumbs_count);
+    thumbs_current = 1;
+
+    for (i = 0; i < thumbs_count; i++) {
+      thumbs[i] = new Image(200,200);
+      thumbs[i].src = "images/thumbs/thumb" + (i+1) + ".jpg";
+    }
+
+    function imageHighlight(name) {
+      document.getElementById(name).src = eval(name+'_highlight').src;
+    }
+
+    function imageNormal(name) {
+      document.getElementById(name).src = eval(name+'_normal').src;
+    }
+
+    function updateImage(image, progress) {
+      if (progress < 0.0 || progress > 100.0) return;
+
+      s = (120.0 - progress) / 120.0;
+      t = 0.8 - ((s * s) * 0.8);
+      if (progress >= 70.0) {
+        s = (progress - 70.0) / 35;
+        t += s * s * s;
+      }
+      width = thumbs_width * t;
+      opacity_start = Math.min(1.0, progress / 50.0);
+      opacity_end = (1.0 - Math.min(1.0, (100.0 - progress) / 20.0));
+      opacity = (opacity_start * opacity_start) - opacity_end;
+
+      x = -(width / 2.0);
+      y = -(width / 2.0);
+
+      elem = document.getElementById(image);
+      elem.style.marginLeft = x + "px";
+      elem.style.marginTop = y + "px";
+      elem.width = width;
+      elem.style.opacity = opacity;
+      elem.style.filter = "alpha(opacity=" + (opacity * 100.0) + ")";
+    }
+
+    function updateImages() {
+      thumbs_measure++;
+
+      updateImage("thumb1", thumb1_progress);
+      updateImage("thumb2", thumb2_progress);
+    }
+
+    function nextThumbImage(image) {
+      thumbs_current++;
+      if (thumbs_current >= thumbs_count) {
+        thumbs_current = 0;
+      }
+      elem = document.getElementById(image);
+      elem.src = thumbs[thumbs_current].src;
+    }
+
+    function updateScroll() {
+      if (timer1 != null) clearInterval(timer1);
+
+      if (thumbs_animation_start == 1) {
+        thumb1_progress += thumbs_speed;
+        thumb2_progress += thumbs_speed;
+
+        if (thumb1_progress >= 150.0) {
+          thumb1_progress = 0;
+          nextThumbImage("thumb1");
+        }
+        if (thumb2_progress >= 150.0) {
+            thumb2_progress = 0.0;
+            nextThumbImage("thumb2");
+        }
+      }
+
+      updateImages();
+
+      startTimer1();
+    }
+
+    function measureTime() {
+      if (timer2 != null) clearInterval(timer2);
+
+      thumbs_speed = (4.0 / ((thumbs_measure - thumbs_measure_last) + 1 )) * thumbs_speed_orig;
+
+      thumbs_measure_last = thumbs_measure;
+      thumbs_animation_start = 1;
+
+      startTimer2();
+    }
+
+    function startTimer1() {
+      timer1 = setInterval("updateScroll()", timer1_interval);
+    }
+
+    function startTimer2() {
+      timer2 = setInterval("measureTime()", timer2_interval);
+    }
+
+    function initialize() {
+      startTimer1();
+      startTimer2();
+    }
+
+    window.onload=initialize;
+  </script>
+</head>
+<body>
+  <h1 class="center">Kampen mod Dystopia</h1>
+  <div class="center"><img src="images/ruler1.png" alt="Ruler" /></div>
+  <table border="0" cellpadding="10" style="margin: 0px auto;"><tr height="120px"><td></td></tr></table>
+  <img src="images/thumbs/thumb1.jpg" id="thumb1" alt="Thumb 1" style="position: absolute; left: 50%; opacity: 0.0; filter: alpha(opacity=0)" />
+  <img src="images/thumbs/thumb2.jpg" id="thumb2" alt="Thumb 2" style="position: absolute; left: 50%; opacity: 0.0; filter: alpha(opacity=0)" />
+  <table border="0" cellpadding="10" style="margin: 0px auto;"><tr height="110px"><td></td></tr></table>
+  <table border="0" cellpadding="10" style="margin: 0px auto;"><tr>
+    <td><div class="center column">
+      <b>Kampen mod Dystopia</b> er et brætspil, der foregår i en eventyrverden befolket af Orc'er og udødelige skabninger fra Underverdenen. Wizor, hersker over Dystopia, har bemægtiget sig Idyllistand, kongeriget, hvor fred og idyl altid har eksisteret og hvor ingen ond skabning tidligere har sat sine ben. Nu er det op til de få overlevende helte at befri riget - og du er en af dem!
+    </div></td>
+    </tr><tr>
+    <td><div class="center column">
+      <b>Nedenfor finder du</b> alt det du skal bruge for at lave din egen version af brætspillet. Udskriv spillereglerne, eventyrbogen og elementerne, følg instruktionerne, der illustrerer hvordan du klipper og klistrer det - og spil!
+    </div></td>
+  </tr></table>
+  <br />
+  <table border="0" cellpadding="10" style="margin: 0px auto;"><tr>
+    <td>
+      <a href="pdf/spilleregler.pdf"><img src="images/spilleregler.png" id="spilleregler" width="100px" height="100px" onmouseover="imageHighlight('spilleregler')" onmouseout="imageNormal('spilleregler')" alt="Spilleregler"/></a>
+    </td>
+    <td>
+      <a href="pdf/eventyrbog.pdf"><img src="images/eventyrbog.png" id="eventyrbog" width="100px" height="100px" onmouseover="imageHighlight('eventyrbog')" onmouseout="imageNormal('eventyrbog')" alt="Eventyrbog"/></a>
+    </td>
+    <td>
+      <a href="pdf/elementer.pdf"><img src="images/elementer.png" id="elementer" width="100px" height="100px" onmouseover="imageHighlight('elementer')" onmouseout="imageNormal('elementer')" alt="Elementer"/></a>
+    </td>
+  </tr></table>
+  <div class="center">
+    <a href="instruktioner.html"><img src="images/instruktion.png" id="instruktion" width="100px" height="100px" onmouseover="imageHighlight('instruktion')" onmouseout="imageNormal('instruktion')" alt="Instruktioner"/></a>
+  </div>
+</body>
+</html>

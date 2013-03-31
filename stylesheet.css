@@ -1,0 +1,43 @@
+body {
+      background-color: #000000;
+      color: #cccccc
+}
+
+h1.center {
+    text-align: center;
+    color: #f0f0f0;
+}
+
+h2 {
+    color: #f0f0f0
+}
+
+div.center {
+    text-align: center
+}
+
+div.gray {
+    color: #888888
+}
+
+p.center {
+    text-align: center
+}
+
+p.yellow {
+    color: #887733
+}
+
+div.column {
+    width: 500px;
+}
+
+a {
+   color: #000000;
+   background-color: transparent;
+   text-decoration: none
+}
+
+a.yellow {
+   color: #cccc55
+}
